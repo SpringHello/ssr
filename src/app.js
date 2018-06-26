@@ -5,8 +5,6 @@ import Main from './Main'
 import createRouter from './router'
 import createStore  from './store'
 
-//import './assets/style/reset.css'
-
 Vue.config.productionTip = false
 
 export default function () {
