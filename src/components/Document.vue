@@ -26,7 +26,7 @@
           <div v-for="(item,index) in problems" :key="index">
             <p>{{item.title}}</p>
             <ul>
-              <li v-for="(subTitle,subIndex) in item.problem">{{subTitle.name}}</li>
+              <li v-for="(subTitle,subIndex) in item.problem" :key="subIndex">{{subTitle.name}}</li>
             </ul>
           </div>
         </div>
@@ -37,16 +37,16 @@
 </template>
 
 <script type="text/ecmascript-6">
-import axios from '@/util/axiosInterceptor'
 export default {
   name: 'document',
+  asyncData ({ store, route, cookies }) {
+    return store.dispatch('getFirstTitle', { route, cookies })
+  },
   data () {
     return {
       // 选中项
       selectDoc: true,
       selectPro: false,
-      // 帮助文档
-      contentList: [],
       // 常见问题
       problems: [
         {
@@ -94,13 +94,6 @@ export default {
       ]
     }
   },
-  beforeRouteEnter (to, from, next) {
-    axios.get('document/getFirstTitle.do').then(response => {
-      next(vm => {
-        vm.setData(response)
-      })
-    })
-  },
   methods: {
     setData (response) {
       this.contentList = response.data.result
@@ -109,6 +102,11 @@ export default {
       sessionStorage.setItem('document-main', id)
       sessionStorage.removeItem('document-minor')
       this.$router.push('documentInfo')
+    }
+  },
+  computed: {
+    contentList () {
+      return this.$store.state.firstTitle
     }
   }
 }

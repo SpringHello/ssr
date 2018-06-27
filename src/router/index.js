@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import App1 from '@/components/App1'
 import Home from '@/components/Home'
 import Aboutus from '@/components/Aboutus'
-import Document from '@/components/Document'
+import document from '@/components/Document'
 import ActiveCenter from '@/components/ActiveCenter'
 import Balance from '@/components/product/Balance'
 import CloudDisk from '@/components/product/CloudDisk'
@@ -18,6 +18,10 @@ import Host from '@/components/product/Host'
 import NATgateway from '@/components/product/NATgateway'
 import VirtualVPN from '@/components/product/VirtualVPN'
 import VPC from '@/components/product/VPC'
+import Login from '@/components/LR/Login'
+import Register from '@/components/LR/Register'
+import RegisterSuccess from '@/components/LR/RegisterSuccess'
+import Reset from '@/components/LR/Reset'
 
 Vue.use(Router)
 
@@ -33,7 +37,7 @@ export default function () {
         children: [
           {path: 'home', name: Home.name, component: Home},
           {path: 'Aboutus', name: Aboutus.name, component: Aboutus},
-          {path: 'Document', name: Document.name, component: Document},
+          {path: 'document', name: document.name, component: document},
           {path: 'activeCenter', name: ActiveCenter.name, component: ActiveCenter},
           {path: 'Pbalance', name: Balance.name, component: Balance},
           {path: 'PCloudDisk', name: CloudDisk.name, component: CloudDisk},
@@ -47,7 +51,11 @@ export default function () {
           {path: 'PHost', name: Host.name, component: Host},
           {path: 'PNATgateway', name: NATgateway.name, component: NATgateway},
           {path: 'PVirtualVPN', name: VirtualVPN.name, component: VirtualVPN},
-          {path: 'PVPC', name: VPC.name, component: VPC}
+          {path: 'PVPC', name: VPC.name, component: VPC},
+          {path: 'login', name: 'login', component: Login},
+          {path: 'register', name: 'register', component: Register},
+          {path: 'reset', name: 'reset', component: Reset},
+          {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
         ]
       }
     ]

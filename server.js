@@ -78,7 +78,24 @@ app.all('*', function (req, res, next) {
 
 app.get('/ruicloud/user/GetUserInfo.do', function (req, res) {
   let JSESSIONID = req.cookies.JSESSIONID
-  axios.get('/ruicloud/user/GetUserInfo.do', {
+  axios.get('user/GetUserInfo.do', {
+    headers: {
+      Cookie: `JSESSIONID=${JSESSIONID}`
+    }
+  }).then(response => {
+    //console.log(response)
+    res.set({
+      'XDomainRequestAllowed': '1',
+    })
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/document/getFirstTitle.do', function (req, res) {
+  let JSESSIONID = req.cookies.JSESSIONID
+  axios.get('document/getFirstTitle.do', {
     headers: {
       Cookie: `JSESSIONID=${JSESSIONID}`
     }

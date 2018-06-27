@@ -13,6 +13,7 @@ export default function () {
       zoneList: null,
       // 当前区域
       zone: null,
+      firstTitle: null
     },
     actions: {
       fetchItem ({commit, state}, {route, cookies}) {
@@ -36,6 +37,11 @@ export default function () {
           },
           value => {
           })
+      },
+      getFirstTitle ({commit, state}, {route, cookies}) {
+        http.get('document/getFirstTitle.do').then(response => {
+          commit('setFirstTitle', response)
+        })
       },
       login ({commit}, id) {
         // `store.dispatch()` 会返回 Promise，
@@ -63,6 +69,9 @@ export default function () {
             state.zone = zone
           }
         }
+      },
+      setFirstTitle (state, response) {
+        state.firstTitle = response.data.result
       }
     }
   })
