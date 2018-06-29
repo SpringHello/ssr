@@ -156,6 +156,15 @@ app.get('/ruicloud/document/listHotQuestion.do', function (req, res) {
   })
 })
 
+app.get('/ruicloud/article/getArticleType.do', function (req, res) {
+  axios.get('article/getArticleType.do').then(response => {
+    console.log(response)
+    res.end(JSON.stringify(response.data))
+  }, response => {
+  })
+})
+
+
 app.use(express.static('./dist'))
 // response
 app.get('/ruicloud/*', function (req, res) {
