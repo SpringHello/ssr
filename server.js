@@ -83,10 +83,16 @@ app.get('/ruicloud/user/GetUserInfo.do', function (req, res) {
       Cookie: `JSESSIONID=${JSESSIONID}`
     }
   }).then(response => {
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/information/zone.do', function (req, res) {
+  let JSESSIONID = req.cookies.JSESSIONID
+  axios.get('information/zone.do').then(response => {
     //console.log(response)
-    res.set({
-      'XDomainRequestAllowed': '1',
-    })
     res.end(JSON.stringify(response.data))
   }, response => {
 
@@ -95,15 +101,55 @@ app.get('/ruicloud/user/GetUserInfo.do', function (req, res) {
 
 app.get('/ruicloud/document/getFirstTitle.do', function (req, res) {
   let JSESSIONID = req.cookies.JSESSIONID
-  axios.get('document/getFirstTitle.do', {
-    headers: {
-      Cookie: `JSESSIONID=${JSESSIONID}`
+  axios.get('document/getFirstTitle.do').then(response => {
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/user/login.do', function (req, res) {
+  axios.get('user/login.do', {
+    params: {
+      username: req.query.username,
+      password: req.query.password,
+      vailCode: req.query.vailCode
     }
   }).then(response => {
-    //console.log(response)
-    res.set({
-      'XDomainRequestAllowed': '1',
-    })
+    console.log(response)
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/document/getThirdTitle.do', function (req, res) {
+  axios.get('document/getThirdTitle.do', {
+    params: {
+      id: req.query.id
+    }
+  }).then(response => {
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/document/listInformation.do', function (req, res) {
+  axios.get('document/listInformation.do', {
+    params: {
+      id: req.query.id
+    }
+  }).then(response => {
+    res.end(JSON.stringify(response.data))
+  }, response => {
+
+  })
+})
+
+app.get('/ruicloud/document/listHotQuestion.do', function (req, res) {
+  let JSESSIONID = req.cookies.JSESSIONID
+  axios.get('document/listHotQuestion.do').then(response => {
     res.end(JSON.stringify(response.data))
   }, response => {
 
