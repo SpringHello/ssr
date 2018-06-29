@@ -13,6 +13,7 @@ export default function () {
       zoneList: null,
       // 当前区域
       zone: null,
+
       /*文档页面需要的数据*/
       // 主导航
       firstTitle: [],
@@ -21,8 +22,14 @@ export default function () {
       // 二级导航
       menuList: [],
       // 正文内容
-      content: ''
+      content: '',
       /*文档页面需要的数据END*/
+
+      /*咨询页面需要的数据*/
+      // 文章类型
+      articleType: [],
+      /*咨询页面需要的数据END*/
+
     },
     actions: {
       fetchItem ({commit, state}, {route, cookies}) {
@@ -74,16 +81,10 @@ export default function () {
           commit('setContent', values[2])
         })
       },
-      login ({commit}, id) {
-        // `store.dispatch()` 会返回 Promise，
-        // 以便我们能够知道数据在何时更新
-        return http.get('user/login.do', {
-          params: {
-            username: 'sdf',
-            password: 'asdf'
-          }
-        }).then(response => {
-          commit('setItem', response.data)
+      getArticleType({commit, state}, {route, cookies}){
+        http.get('article/getArticleType.do').then(response => {
+          console.log(response)
+          commit('setArticleType', response)
         })
       }
     },
@@ -112,6 +113,9 @@ export default function () {
       },
       setHotQuestion(state, response){
         state.hotQuestion = response.data.result
+      },
+      setArticleType(state, response){
+        state.articleType = response.data.result
       }
     }
   })
