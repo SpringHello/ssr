@@ -4,6 +4,7 @@ import App1 from '@/components/App1'
 import Home from '@/components/Home'
 import Aboutus from '@/components/Aboutus'
 import document from '@/components/Document'
+import documentInfo from '@/components/DocumentInfo'
 import ActiveCenter from '@/components/ActiveCenter'
 import Balance from '@/components/product/Balance'
 import CloudDisk from '@/components/product/CloudDisk'
@@ -38,6 +39,7 @@ export default function () {
           {path: 'home', name: Home.name, component: Home},
           {path: 'Aboutus', name: Aboutus.name, component: Aboutus},
           {path: 'document', name: document.name, component: document},
+          {path: 'documentInfo/:parentId/:id', component: documentInfo},
           {path: 'activeCenter', name: ActiveCenter.name, component: ActiveCenter},
           {path: 'Pbalance', name: Balance.name, component: Balance},
           {path: 'PCloudDisk', name: CloudDisk.name, component: CloudDisk},

@@ -1,7 +1,20 @@
 /**
  * Created by yunrui001 on 2018-06-15.
  */
+import Vue from 'vue'
 import createApp from './app'
+//import './assets/style/reset.css'
+import iview from 'iview'
+//import 'iview/dist/styles/iview.css'
+//import createApp from './app'
+
+import carousel from './myView/carousel'
+import carouselItem from './myView/carouselItem'
+Vue.use(iview)
+// 使用轮播组件
+Vue.use(carousel)
+Vue.use(carouselItem)
+
 export default context => {
   // 因为有可能会是异步路由钩子函数或组件，所以我们将返回一个 Promise，
   // 以便服务器能够等待所有的内容在渲染前，

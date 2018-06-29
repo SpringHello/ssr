@@ -13,7 +13,16 @@ export default function () {
       zoneList: null,
       // 当前区域
       zone: null,
-      firstTitle: null
+      /*文档页面需要的数据*/
+      // 主导航
+      firstTitle: [],
+      // 热点问题
+      hotQuestion: [],
+      // 二级导航
+      menuList: [],
+      // 正文内容
+      content: ''
+      /*文档页面需要的数据END*/
     },
     actions: {
       fetchItem ({commit, state}, {route, cookies}) {
@@ -39,8 +48,30 @@ export default function () {
           })
       },
       getFirstTitle ({commit, state}, {route, cookies}) {
-        http.get('document/getFirstTitle.do').then(response => {
-          commit('setFirstTitle', response)
+        let hotQuestion = http.get('document/listHotQuestion.do')
+        let first = http.get('document/getFirstTitle.do')
+        return Promise.all([first, hotQuestion]).then(values => {
+          commit('setFirstTitle', values[0])
+          commit('setHotQuestion', values[1])
+        })
+      },
+      getDocumentInfo({commit, state}, {route, cookies}) {
+        let first = http.get('http://xxx.xrcloud.net/ruicloud/document/getFirstTitle.do')
+        let menu = http.get('http://xxx.xrcloud.net/ruicloud/document/getThirdTitle.do', {
+          params: {
+            id: route.params.parentId
+          }
+        })
+        let content = http.get('http://xxx.xrcloud.net/ruicloud/document/listInformation.do', {
+          params: {
+            id: route.params.id
+          }
+        })
+        return Promise.all([first, menu, content]).then(values => {
+          console.log(values)
+          commit('setFirstTitle', values[0])
+          commit('setMenuList', values[1])
+          commit('setContent', values[2])
         })
       },
       login ({commit}, id) {
@@ -72,6 +103,15 @@ export default function () {
       },
       setFirstTitle (state, response) {
         state.firstTitle = response.data.result
+      },
+      setContent (state, response) {
+        state.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
+      },
+      setMenuList (state, response) {
+        state.menuList = response.data.result
+      },
+      setHotQuestion(state, response){
+        state.hotQuestion = response.data.result
       }
     }
   })
