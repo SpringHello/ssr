@@ -2,6 +2,7 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve(dir) {
@@ -40,11 +41,22 @@ module.exports = {
   },
   module: {
     rules: [
+      /*{
+       test: /\.css$/,
+       use: ExtractTextPlugin.extract({
+       fallback: 'style-loader',
+       use: 'css-loader'
+       })
+       },*/
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
+      },
+      {
+        test: /\.css$/,
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.js$/,
