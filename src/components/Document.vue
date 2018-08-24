@@ -67,6 +67,11 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  #document {
+    @diff: 60px;
+    min-height: calc(~"100% - @{diff}");
+  }
+
   .document {
     width: 1200px;
     margin: 0 auto;

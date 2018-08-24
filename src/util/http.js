@@ -4,7 +4,9 @@
 import axios from 'axios'
 import md5 from 'md5'
 
+const http = axios.create({
 
+})
 function appendMD5(params, type) {
   if (params === undefined) {
     return undefined
@@ -38,9 +40,10 @@ function macIntercept(config) {
   }
   return config
 }
-axios.interceptors.request.use(macIntercept)
+http.interceptors.request.use(macIntercept)
 
-/*axios.defaults.baseURL = 'http://ddd.xrcloud.net/ruicloud/'
-axios.defaults.withCredentials = true*/
+//http.defaults.baseURL = 'https://bj.xrcloud.net/ruicloud/'
+http.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+http.defaults.withCredentials = true
 
-export default axios
+export default http

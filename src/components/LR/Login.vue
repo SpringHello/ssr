@@ -30,7 +30,7 @@
                        ref="vailCode"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
-                     @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`https://pan.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
             </form>
           </div>
@@ -54,8 +54,7 @@
 
 <script type="text/ecmascript-6">
   /* 登录名/密码 正则校验 */
-  import regExp from '../../util/regExp'
-  import axios from '../../util/axiosInterceptor'
+  import regExp from '@/util/regExp'
   const messageMap = {
     /* 登录名input tips */
     loginname: {
@@ -102,7 +101,7 @@
         },
 
         /* 验证码地址(加上时间戳，防止缓存) */
-        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`
+        imgSrc: `https://pan.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
       }
     },
     created () {
@@ -170,17 +169,12 @@
         }
       },
       submit () {
-        /* if (!regExp.passwordVail(this.form.password)) {
-         this.vailForm.loginname.message = '密码不符合要求'
-         this.vailForm.loginname.warning = true
-         return
-         } */
         if (this.form.loginname == '' || this.form.password == '' || this.form.vailCode == '') {
           return
         }
         this.$refs.password.blur()
         this.$refs.vailCode.blur()
-        axios.get('user/login.do', {
+        this.$http.get('user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -190,9 +184,9 @@
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
               localStorage.setItem('authToken', response.data.message)
-              this.$router.push({path: 'overview'})
+              window.open('https://pan.xrcloud.net/ruicloud/overview')
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `https://pan.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }

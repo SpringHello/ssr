@@ -3,12 +3,13 @@
  */
 import Vue from 'vue'
 import createApp from './app'
-import './assets/style/reset.css'
+//import './assets/style/reset.css'
 import iview from 'iview'
-import 'iview/dist/styles/iview.css'
+//import 'iview/dist/styles/iview.css'
 // 引入轮播组件
 import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'
+//import './assets/js/iconfont.js'
 Vue.use(iview)
 // 使用轮播组件
 Vue.use(carousel)

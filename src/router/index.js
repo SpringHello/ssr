@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import App1 from '@/components/App1'
+import App from '@/components/App'
 import Home from '@/components/Home'
 import Aboutus from '@/components/Aboutus'
 import Document from '@/components/Document'
@@ -35,12 +35,13 @@ export default function () {
     routes: [
       {
         path: '/ruicloud',
-        name: App1.name,
-        component: App1,
+        name: App.name,
+        component: App,
         children: [
+          {path: '', component: Home},
           {path: 'home', name: Home.name, component: Home},
-          {path: 'Aboutus', name: Aboutus.name, component: Aboutus},
-          {path: 'article', name: Art.name, component: Art},
+          {path: 'about', name: Aboutus.name, component: Aboutus},
+          {path: 'article/:typeId', name: Art.name, component: Art},
           {path: 'document', name: Document.name, component: Document},
           {path: 'documentInfo/:parentId/:id', component: DocumentInfo},
           {path: 'activeCenter', name: ActiveCenter.name, component: ActiveCenter},

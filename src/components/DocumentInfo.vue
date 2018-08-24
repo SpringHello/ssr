@@ -5,11 +5,13 @@
         <p>产品文档<img src="../assets/img/document/menu.png" style="float:right;cursor:pointer" ref="toggle"></p>
       </div>
       <div id="menu">
-        <p>{{title}}</p>
+        <p>{{menuTitle}}</p>
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
-            <p :class="{active:item.active,open:item.open}" @click="item.open=!item.open">{{item.title}}</p>
-            <li v-for="i in item.subMenu" v-show="item.open" :class="{active:i.id == minor}">
+            <p :class="{active:item.active,open:item.title==openParentTitle}" @click="setOpenTitle(item.title)">
+              {{item.title}}</p>
+            <li v-for="i in item.subMenu" v-show="item.title == openParentTitle"
+                :class="{active:i.id == $router.currentRoute.params.id}">
               <router-link :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${i.id}`">{{i.name}}
               </router-link>
             </li>
@@ -47,46 +49,13 @@
     },
     data(){
       return {
-        title: '',
         // 主导航开关
         mainOpen: false,
+        openParentTitle: ''
       }
     },
     beforeRouteUpdate(to, from, next){
-      console.log(to)
       this.$store.dispatch('getDocumentInfo', {route: to})
-      /*var third = axios.get('document/getThirdTitle.do', {
-       params: {
-       id: to.params.parentId
-       }
-       })
-
-       var info = axios.get('document/listInformation.do', {
-       params: {
-       id: to.params.id
-       }
-       })
-       Promise.all([third, info]).then(value => {
-       value[0].data.result.forEach(item => {
-       item.active = false
-       if (item.subMenu) {
-       item.open = false
-       if (item.subMenu.some((i) => {
-       return i.id == this.$router.currentRoute.params.id
-       })) {
-       item.open = true
-       item.active = true
-       }
-       } else {
-       if (item.parentId == this.$router.currentRoute.params.id) {
-       item.active = true
-       }
-       }
-       })
-       this.menuList = value[0].data.result
-       this.title = value[0].data.title
-       this.content = value[1].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
-       })*/
       next()
     },
     mounted(){
@@ -99,42 +68,40 @@
       })
     },
     methods: {
-      /*getContent(id){
-       this.minor = id || this.minor
-       this.refresh()
-       axios.get('document/listInformation.do', {
-       params: {
-       id: this.minor
-       }
-       }).then(response => {
-       this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
-       })
-       },
-       refresh(){
-       this.menuList.forEach(item => {
-       if (item.subMenu) {
-       if (item.subMenu.some((i) => {
-       return i.id == this.minor
-       })) {
-       item.active = true
-       } else {
-       item.active = false
-       }
-       }
-       })
-       }*/
+      setOpenTitle(title){
+        this.openParentTitle = this.openParentTitle == title ? '' : title
+      }
     },
     computed: {
       firstTitle(){
         return this.$store.state.firstTitle
       },
       menuList(){
+        this.$store.state.menuList.forEach(item => {
+          item.active = false
+          if (item.subMenu) {
+            if (item.subMenu.some((i) => {
+                return i.id == this.$router.currentRoute.params.id
+              })) {
+              this.openParentTitle = item.title
+              item.active = true
+            }
+          } else {
+            if (item.parentId == this.$router.currentRoute.params.id) {
+              item.active = true
+            }
+          }
+        })
         return this.$store.state.menuList
+      },
+      menuTitle(){
+        return this.$store.state.menuTitle
       },
       content(){
         return this.$store.state.content
       }
-    }
+    },
+    watch: {}
   }
 </script>
 

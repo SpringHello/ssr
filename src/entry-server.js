@@ -3,9 +3,9 @@
  */
 import Vue from 'vue'
 import createApp from './app'
-//import './assets/style/reset.css'
+import './assets/style/reset.css'
 import iview from 'iview'
-//import 'iview/dist/styles/iview.css'
+import 'iview/dist/styles/iview.css'
 //import createApp from './app'
 
 import carousel from './myView/carousel'

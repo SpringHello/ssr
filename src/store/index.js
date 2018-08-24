@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import http from '../util/http'
+import http from '@/util/http'
 
 Vue.use(Vuex)
 
@@ -21,6 +21,7 @@ export default function () {
       hotQuestion: [],
       // 二级导航
       menuList: [],
+      menuTitle: '',
       // 正文内容
       content: '',
       /*文档页面需要的数据END*/
@@ -28,22 +29,26 @@ export default function () {
       /*咨询页面需要的数据*/
       // 文章类型
       articleType: [],
+      moreArticle: [],
+      keywords: [],
+      hot: [],
       /*咨询页面需要的数据END*/
 
+      /*活动页面*/
+      active: []
     },
     actions: {
       fetchItem ({commit, state}, {route, cookies}) {
-        let zoneList = http.get('information/zone.do', {
-          headers: {
-            Cookie: `JSESSIONID=${cookies.JSESSIONID}`
+        let config = {}
+        if (cookies && cookies.XJSESSIONID) {
+          config.headers = {
+            Cookie: `XJSESSIONID=${cookies.XJSESSIONID}`
           }
-        })
-        let userInfo = http.get('user/GetUserInfo.do', {
-          headers: {
-            Cookie: `JSESSIONID=${cookies.JSESSIONID}`
-          }
-        })
+        }
+        let zoneList = http.get('information/zone.do')
+        let userInfo = http.get('user/GetUserInfo.do', config)
         return Promise.all([userInfo, zoneList]).then(values => {
+            //console.log(values[0])
             if (values[0].data.status == 1 && values[0].status == 200) {
               commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
             }
@@ -52,8 +57,10 @@ export default function () {
             }
           },
           value => {
+            console.log(value)
           })
       },
+      // 文档模块action
       getFirstTitle ({commit, state}, {route, cookies}) {
         let hotQuestion = http.get('document/listHotQuestion.do')
         let first = http.get('document/getFirstTitle.do')
@@ -63,28 +70,57 @@ export default function () {
         })
       },
       getDocumentInfo({commit, state}, {route, cookies}) {
-        let first = http.get('http://xxx.xrcloud.net/ruicloud/document/getFirstTitle.do')
-        let menu = http.get('http://xxx.xrcloud.net/ruicloud/document/getThirdTitle.do', {
+        let first = http.get('document/getFirstTitle.do')
+        let menu = http.get('document/getThirdTitle.do', {
           params: {
             id: route.params.parentId
           }
         })
-        let content = http.get('http://xxx.xrcloud.net/ruicloud/document/listInformation.do', {
+        let content = http.get('document/listInformation.do', {
           params: {
             id: route.params.id
           }
         })
         return Promise.all([first, menu, content]).then(values => {
-          console.log(values)
           commit('setFirstTitle', values[0])
           commit('setMenuList', values[1])
           commit('setContent', values[2])
         })
       },
-      getArticleType({commit, state}, {route, cookies}){
-        http.get('article/getArticleType.do').then(response => {
-          console.log(response)
-          commit('setArticleType', response)
+      // 资讯模块action
+      getArticlePage({commit, state}, {route, cookies}){
+        let articleType = http.get('article/getArticleType.do')
+        let moreArticle = http.post('article/getMoreArticle.do', {
+          articleTypeId: route.params.typeId,
+          keywordVal: '',
+          page: '1',
+          pageSize: '5'
+        })
+        let keywords = http.get('article/getKeywords.do')
+        let hot = http.get('article/getHotInformation.do', {
+          params: {
+            size: 4
+          }
+        })
+        return Promise.all([articleType, moreArticle, keywords, hot]).then(values => {
+          commit('setArticlePage', values)
+        }, value => {
+          console.log(value)
+        })
+      },
+      getMoreArticle({commit, state}, typeId){
+        http.post('article/getMoreArticle.do', {
+          articleTypeId: typeId,
+          page: '1',
+          pageSize: '5'
+        }).then(response => {
+          state.moreArticle = response.data.result
+        })
+      },
+
+      getActive({commit, state}, {route, cookies}){
+        return http.get('activity/getActivitys.do').then(response => {
+          state.active = response.data.result
         })
       }
     },
@@ -110,12 +146,16 @@ export default function () {
       },
       setMenuList (state, response) {
         state.menuList = response.data.result
+        state.menuTitle = response.data.title
       },
       setHotQuestion(state, response){
         state.hotQuestion = response.data.result
       },
-      setArticleType(state, response){
-        state.articleType = response.data.result
+      setArticlePage(state, values){
+        state.articleType = values[0].data.result
+        state.moreArticle = values[1].data.result
+        state.keywords = values[2].data.result
+        state.hot = values[3].data.result
       }
     }
   })
